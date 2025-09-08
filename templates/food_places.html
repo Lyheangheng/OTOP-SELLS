@@ -8,12 +8,12 @@
     <div class="col-md-6 col-lg-4 mb-4">
       <div class="card h-100">
         <div class="card-body">
-          <h5 class="card-title">{{ place['ชื่อสถานที่จัดจำหน่าย']|default:place['ชื่อสินค้า OTOP'] }}</h5>
-          <p class="card-text"><strong>Product:</strong> {{ place['ชื่อสินค้า OTOP'] }}</p>
-          <p class="card-text"><strong>Address:</strong> {{ place['ที่อยู่']|default:'-' }}</p>
-          <p class="card-text"><strong>District:</strong> {{ place['อำเภอ'] }}</p>
-          <p class="card-text"><strong>Province:</strong> {{ place['จังหวัด'] }}</p>
-          <p class="card-text"><strong>Phone:</strong> {{ place['เบอร์โทรศัพท์']|default:'-' }}</p>
+          <h5 class="card-title">{{ place.place_name|default:place.product_name }}</h5>
+          <p class="card-text"><strong>Product:</strong> {{ place.product_name }}</p>
+          <p class="card-text"><strong>Address:</strong> {{ place.address|default:'-' }}</p>
+          <p class="card-text"><strong>District:</strong> {{ place.district }}</p>
+          <p class="card-text"><strong>Province:</strong> {{ place.province }}</p>
+          <p class="card-text"><strong>Phone:</strong> {{ place.phone|default:'-' }}</p>
         </div>
       </div>
     </div>
@@ -30,7 +30,7 @@
       {% for place in places %}
         {% if place.LAT and place.LONG %}
           {
-            name: `{{ place['ชื่อสถานที่จัดจำหน่าย']|default:place['ชื่อสินค้า OTOP'] }}`,
+            name: `{{ place.place_name|default:place.product_name }}`,
             lat: {{ place.LAT }},
             lng: {{ place.LONG }}
           },
