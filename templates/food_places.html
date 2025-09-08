@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container">
+  <h1 class="mt-4 mb-4">Food Places in Krabi</h1>
+  <div id="map" style="height: 500px; width: 100%; margin-bottom: 2rem;"></div>
+  <div class="row">
+    {% for place in places %}
+    <div class="col-md-6 col-lg-4 mb-4">
+      <div class="card h-100">
+        <div class="card-body">
+          <h5 class="card-title">{{ place['ชื่อสถานที่จัดจำหน่าย']|default:place['ชื่อสินค้า OTOP'] }}</h5>
+          <p class="card-text"><strong>Product:</strong> {{ place['ชื่อสินค้า OTOP'] }}</p>
+          <p class="card-text"><strong>Address:</strong> {{ place['ที่อยู่']|default:'-' }}</p>
+          <p class="card-text"><strong>District:</strong> {{ place['อำเภอ'] }}</p>
+          <p class="card-text"><strong>Province:</strong> {{ place['จังหวัด'] }}</p>
+          <p class="card-text"><strong>Phone:</strong> {{ place['เบอร์โทรศัพท์']|default:'-' }}</p>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+<script>
+  function initMap() {
+    var map = new google.maps.Map(document.getElementById('map'), {
+      zoom: 10,
+      center: {lat: 8.0863, lng: 98.9063} // Center on Krabi
+    });
+    var places = [
+      {% for place in places %}
+        {% if place.LAT and place.LONG %}
+          {
+            name: `{{ place['ชื่อสถานที่จัดจำหน่าย']|default:place['ชื่อสินค้า OTOP'] }}`,
+            lat: {{ place.LAT }},
+            lng: {{ place.LONG }}
+          },
+        {% endif %}
+      {% endfor %}
+    ];
+    places.forEach(function(place) {
+      var marker = new google.maps.Marker({
+        position: {lat: place.lat, lng: place.lng},
+        map: map,
+        title: place.name,
+        icon: {
+          url: "http://maps.google.com/mapfiles/ms/icons/red-dot.png"
+        }
+      });
+      var infowindow = new google.maps.InfoWindow({
+        content: `<strong>${place.name}</strong><br>Lat: ${place.lat}<br>Lng: ${place.lng}`
+      });
+      marker.addListener('click', function() {
+        infowindow.open(map, marker);
+      });
+    });
+  }
+</script>
+<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyATRuubv3L9TEtdgtTk0tAziudpHnTiQys&callback=initMap"></script>
+{% endblock %}
