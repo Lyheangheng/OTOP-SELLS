@@ -1,6 +1,7 @@
 import json
 from django.shortcuts import render
 import os
+from django.conf import settings
 
 def index(request):
     return render(request, 'index.html')
@@ -27,4 +28,5 @@ def food_places(request):
             'LAT': place.get('LAT', None),
             'LONG': place.get('LONG', None),
         })
-    return render(request, 'food_places.html', {'places': places})
+    api_key = getattr(settings, 'GOOGLE_MAPS_API_KEY', '')
+    return render(request, 'food_places.html', {'places': places, 'google_maps_api_key': api_key})
